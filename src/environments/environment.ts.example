@@ -1,0 +1,6 @@
+export const environment = {
+  production: false,
+  baseUrl: 'API_PATH',
+  rootDir: 'ROOT_DIR'
+};
+
