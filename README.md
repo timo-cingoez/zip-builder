@@ -25,3 +25,9 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+# TODO
+* add highlighting / selected state for selected items (both commits and files)
+* remove highlighting / selected state when resetting selected files
+* fix API :)
+* add more file info to available files (maybe tags based on their extension, filesize, ..)
