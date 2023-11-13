@@ -3,5 +3,6 @@ export interface Commit {
   author: string,
   datetime: string,
   message: string,
-  files: string[]
+  files: string[],
+  isSelected: boolean
 }

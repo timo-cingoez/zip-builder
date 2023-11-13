@@ -43,3 +43,6 @@ Thumbs.db
 
 # Ignore environment configuration files
 /src/environments/environment.ts
+
+# Temp
+/src/temp/*

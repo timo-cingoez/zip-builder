@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {catchError, map, Observable, tap, throwError} from 'rxjs';
 import {environment} from "../environments/environment";
+import {FileData} from "../types/file";
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +13,14 @@ export class FileService {
   constructor(private http: HttpClient) {
   }
 
-  public getAvailableFiles(): Observable<string[]> {
-    const script = 'get-files.php';
-    return this.http.get<string[]>(`${this.baseUrl}${script}`);
+  public getAvailableFiles(): Observable<FileData[]> {
+    const url = `${this.baseUrl}get-files.php`;
+    return this.http.get<FileDataResponse>(url, {responseType: 'json'}).pipe(
+      map((response: FileDataResponse) => response.files),
+      map((files: FileData[]) => files.map(file => ({...file, isSelected: false}))),
+      tap((files: FileData[]) => console.log('Parsed Files:', files)),
+      catchError(this.handleError)
+    );
   }
 
   public sendFiles(data: any): Observable<any> {
@@ -59,4 +65,19 @@ export class FileService {
         }
       });
   }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'An error occurred';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.log(errorMessage);
+    return throwError(() => new Error(errorMessage));
+  }
+}
+
+interface FileDataResponse {
+  files: FileData[];
 }

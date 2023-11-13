@@ -1,0 +1,5 @@
+export interface FileData {
+  path: string,
+  size: number,
+  isSelected: boolean
+}

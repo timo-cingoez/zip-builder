@@ -3,6 +3,7 @@ import {FileService} from "../services/file.service";
 import {CommitService} from "../services/commit.service";
 import {Commit} from "../types/commit";
 import {environment} from "../environments/environment";
+import {FileData} from "../types/file";
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,9 @@ export class AppComponent implements OnInit {
 
   public selectedFiles: Set<string> = new Set();
 
-  public availableFiles: Set<string> = new Set();
+  public fileDataList: FileData[] = [];
 
-  public searchedFiles: Set<string> = new Set();
+  public searchedFiles: Set<FileData> = new Set();
 
   public searchResultCount: number = 0;
 
@@ -30,7 +31,7 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.initAvailableFiles();
+    this.initFileDataList();
     this.initAvailableCommits();
   }
 
@@ -48,11 +49,11 @@ export class AppComponent implements OnInit {
     });
   }
 
-  public initAvailableFiles() {
+  public initFileDataList(): void {
     this.fileService.getAvailableFiles().subscribe({
       next: (files) => {
-        this.availableFiles = new Set(files);
-        this.availableFilesCount = this.availableFiles.size;
+        this.fileDataList = files;
+        this.availableFilesCount = this.fileDataList.length;
       },
       error: (error) => {
         console.error('Error fetching files:', error);
@@ -63,36 +64,56 @@ export class AppComponent implements OnInit {
     });
   }
 
-  public selectCommitFiles(idx: number) {
-    const commitsArray = Array.from(this.availableCommits);
-    const selectedCommit: any = commitsArray[idx];
-    selectedCommit.files.forEach((file: string) => this.selectFile(file));
+  public onCommitClick(commit: Commit) {
+    if (commit.isSelected) {
+      commit.isSelected = false;
+      commit.files.forEach((file: string) => this.unselectFile(file));
+    } else {
+      commit.isSelected = true;
+      commit.files.forEach((file: string) => this.selectFile(file));
+    }
   }
 
   public selectFile(filePath: string): void {
-    this.availableFiles.delete(filePath);
+    const selectedObj = this.fileDataList.find((fileData) => fileData.path === filePath);
+    if (selectedObj) {
+      selectedObj.isSelected = true;
+    } else {
+      console.error(`Selected file ${filePath} not found. (very bad)`);
+    }
+
     this.selectedFiles.add(filePath);
     this.selectedFiles = new Set(this.selectedFiles);
   }
 
   public unselectFile(filePath: string): void {
     this.selectedFiles.delete(filePath);
-    this.availableFiles.add(filePath);
+    this.selectedFiles = new Set(this.selectedFiles);
+    const selectedObj = this.fileDataList.find((fileData) => fileData.path === filePath);
+    if (selectedObj) {
+      selectedObj.isSelected = false;
+
+      for (const commit of this.availableCommits) {
+        commit.isSelected = commit.files.every(path => this.selectedFiles.has(path));
+      }
+    } else {
+      console.error(`Selected file ${filePath} not found.`);
+    }
   }
 
   public searchFiles(searchText: any) {
     this.searchedFiles = new Set();
 
-    this.availableFiles.forEach((fileName) => {
-      if (fileName.includes(searchText)) {
-        this.searchedFiles.add(fileName);
+    this.fileDataList.forEach((fileData: FileData) => {
+      if (fileData.path.includes(searchText)) {
+        this.searchedFiles.add(fileData);
       }
     });
 
     this.searchResultCount = this.searchedFiles.size;
 
-    console.log('searchText', searchText);
-    console.log('this.searchedFiles', this.searchedFiles);
+    // console.log('searchText', searchText);
+    // console.log('this.searchedFiles', this.searchedFiles);
   }
 
   public initZip(): boolean {
@@ -123,8 +144,12 @@ export class AppComponent implements OnInit {
     return true;
   }
 
-  public resetSelectedFiles() {
-    // TODO: Unselect all commits.
+  public reset() {
     this.selectedFiles = new Set();
+    this.searchedFiles = new Set();
+    this.fileDataList.forEach((fileData) => fileData.isSelected = false);
+    for (const commit of this.availableCommits) {
+      commit.isSelected = false;
+    }
   }
 }

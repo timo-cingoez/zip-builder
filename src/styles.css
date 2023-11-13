@@ -127,3 +127,19 @@ body {
   display: flex;
   flex-wrap: wrap;
 }
+
+.bg-lime-500 {
+  background-color: rgb(132 204 22) !important;
+}
+
+.bg-zinc-500 {
+  background-color: rgb(113 113 122) !important;
+}
+
+.bg-amber-800 {
+  background-color: rgb(146 64 14) !important;
+}
+
+.bg-blue-800 {
+  background-color: rgb(30 64 175) !important;
+}

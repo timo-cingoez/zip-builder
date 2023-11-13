@@ -23,7 +23,7 @@
 
     </cdk-virtual-scroll-viewport>
 
-    <button (click)="resetSelectedFiles()">Reset</button>
+    <button (click)="reset()">Reset</button>
     <button (click)="initZip()">Create ZIP</button>
 
   </div>
@@ -41,9 +41,10 @@
       <cdk-virtual-scroll-viewport itemSize="30"
                                    class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
 
-        <div *cdkVirtualFor="let filePath of searchedFiles" class="item border-2 border-solid border-amber-700"
-             (click)="selectFile(filePath)">
-          {{ filePath }}
+        <div *cdkVirtualFor="let fileData of searchedFiles" class="item border-2 border-solid border-amber-700"
+             (click)="selectFile(fileData.path)"
+             [ngClass]="{'bg-amber-800': fileData.isSelected}">
+          {{ fileData.path }}
         </div>
 
       </cdk-virtual-scroll-viewport>
@@ -59,11 +60,14 @@
       <cdk-virtual-scroll-viewport itemSize="30"
                                    class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
 
-        <div *cdkVirtualFor="let commit of availableCommits; let i = index"
+        <div *cdkVirtualFor="let commit of availableCommits"
              class="item border-2 border-solid border-blue-700"
-             style="display: flex; flex-direction: column;" (click)="selectCommitFiles(i)">
+             style="display: flex; flex-direction: column;" (click)="onCommitClick(commit)"
+             [ngClass]="{'bg-blue-800': commit.isSelected}">
+
           <span>{{ commit.sha }} - {{ commit.author }} - {{ commit.datetime }}</span>
           <span>{{ commit.message }}</span>
+
         </div>
 
       </cdk-virtual-scroll-viewport>
