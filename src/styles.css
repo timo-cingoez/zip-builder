@@ -107,6 +107,10 @@ body {
   gap: 0.625rem; /* 10px */
 }
 
+.gap-3 {
+  gap: 0.75rem; /* 12px */
+}
+
 .border-lime-700 {
   border-color: rgb(77 124 15);
 }
@@ -142,4 +146,20 @@ body {
 
 .bg-blue-800 {
   background-color: rgb(30 64 175) !important;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.text-gray-200 {
+  color: rgb(229 231 235);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.bg-neutral-800 {
+  background-color: rgb(38 38 38);
 }

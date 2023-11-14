@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
 
   public availableCommits: Set<Commit> = new Set();
 
-  public selectedFiles: Set<string> = new Set();
+  public selectedFiles: Set<FileData> = new Set();
 
   public fileDataList: FileData[] = [];
 
@@ -67,37 +67,37 @@ export class AppComponent implements OnInit {
   public onCommitClick(commit: Commit) {
     if (commit.isSelected) {
       commit.isSelected = false;
-      commit.files.forEach((file: string) => this.unselectFile(file));
+      commit.files.forEach((file: string) => {
+        const fileData = [...this.selectedFiles].find(obj => obj.path === file);
+        if (fileData) {
+          this.unselectFile(fileData);
+        }
+      });
     } else {
       commit.isSelected = true;
-      commit.files.forEach((file: string) => this.selectFile(file));
+      commit.files.forEach((file: string) => {
+        const fileData = this.fileDataList.find(obj => obj.path === file);
+        if (fileData) {
+          this.selectFile(fileData);
+        }
+      });
     }
   }
 
-  public selectFile(filePath: string): void {
-    const selectedObj = this.fileDataList.find((fileData) => fileData.path === filePath);
-    if (selectedObj) {
-      selectedObj.isSelected = true;
-    } else {
-      console.error(`Selected file ${filePath} not found. (very bad)`);
-    }
-
-    this.selectedFiles.add(filePath);
+  public selectFile(fileData: FileData): void {
+    fileData.isSelected = true;
+    this.selectedFiles.add(fileData);
     this.selectedFiles = new Set(this.selectedFiles);
   }
 
-  public unselectFile(filePath: string): void {
-    this.selectedFiles.delete(filePath);
+  public unselectFile(fileData: FileData): void {
+    this.selectedFiles.delete(fileData);
     this.selectedFiles = new Set(this.selectedFiles);
-    const selectedObj = this.fileDataList.find((fileData) => fileData.path === filePath);
-    if (selectedObj) {
-      selectedObj.isSelected = false;
 
-      for (const commit of this.availableCommits) {
-        commit.isSelected = commit.files.every(path => this.selectedFiles.has(path));
-      }
-    } else {
-      console.error(`Selected file ${filePath} not found.`);
+    fileData.isSelected = false;
+
+    for (const commit of this.availableCommits) {
+      commit.isSelected = commit.files.every(path => [...this.selectedFiles].some(obj => obj.path === path));
     }
   }
 
@@ -122,10 +122,12 @@ export class AppComponent implements OnInit {
       return false;
     }
 
+    const files: string[] = [...this.selectedFiles].map(fileData => fileData.path);
+
     const data = {
       'action': 'BUILD_ZIP',
       'rootDir': environment.rootDir,
-      'files': Array.from(this.selectedFiles)
+      'files': files
     };
 
     this.fileService.sendFiles(data).subscribe({

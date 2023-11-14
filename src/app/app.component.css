@@ -1,24 +1,10 @@
 .item {
   height: auto;
-  display: flex;
-  justify-content: space-between;
-  padding: 5px;
-}
-
-.viewport div {
-  font-size: 1.25em;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 10px;
-  background-color: #282828;
   margin: 10px;
   padding: 10px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
   transition: background-color .2s;
 }
 
-.viewport div:hover {
-  background-color: #2f2b3a;
+.item:hover {
+  background-color: rgb(82 82 82);
 }

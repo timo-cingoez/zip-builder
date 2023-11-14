@@ -16,9 +16,14 @@
     <cdk-virtual-scroll-viewport itemSize="20"
                                  class="selected-files viewport overflow-auto h-96 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
 
-      <div *cdkVirtualFor="let filePath of selectedFiles" class="item border-2 border-solid border-lime-700"
-           (click)="unselectFile(filePath)">
-        {{ filePath }}
+      <div *cdkVirtualFor="let fileData of selectedFiles"
+           class="item flex flex-row justify-between gap-3 border-2 border-solid border-lime-700 text-gray-200 cursor-pointer bg-neutral-800 text-xl"
+           (click)="unselectFile(fileData)">
+
+        <span>{{ fileData.path }}</span>
+        <span>{{ fileData.size }}</span>
+        <img width="32" height="32" [src]="'assets/images/' + fileData.extension + '.png'" alt="file extension image">
+
       </div>
 
     </cdk-virtual-scroll-viewport>
@@ -33,18 +38,24 @@
     <div class="w-full flex flex-col items-center">
 
       <div class="w-full flex flex-col items-center h-14">
+
         <span class="text-xl text-center">Search for files ({{ searchResultCount }} results)</span>
         <input class="w-80" type="text" placeholder="Filename, e.g.: inc\User\Data.php"
                (input)="searchFiles($any($event.target).value)">
+
       </div>
 
       <cdk-virtual-scroll-viewport itemSize="30"
                                    class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
 
-        <div *cdkVirtualFor="let fileData of searchedFiles" class="item border-2 border-solid border-amber-700"
-             (click)="selectFile(fileData.path)"
+        <div *cdkVirtualFor="let fileData of searchedFiles"
+             class="item flex flex-row justify-between border-2 border-solid border-amber-700 text-gray-200 cursor-pointer bg-neutral-800 text-xl"
+             (click)="selectFile(fileData)"
              [ngClass]="{'bg-amber-800': fileData.isSelected}">
+
           {{ fileData.path }}
+          <img width="32" height="32" [src]="'assets/images/' + fileData.extension + '.png'" alt="file extension image">
+
         </div>
 
       </cdk-virtual-scroll-viewport>
@@ -54,14 +65,17 @@
     <div class="w-full flex flex-col">
 
       <div class="w-full flex flex-col items-center h-14">
+
         <span class="text-xl text-center h-14">Commits</span>
         <span>Since DD-MM-YYYY / Until DD-MM-YYYY</span>
+
       </div>
+
       <cdk-virtual-scroll-viewport itemSize="30"
                                    class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
 
         <div *cdkVirtualFor="let commit of availableCommits"
-             class="item border-2 border-solid border-blue-700"
+             class="item border-2 border-solid border-blue-700 text-gray-200 cursor-pointer bg-neutral-800 text-xl"
              style="display: flex; flex-direction: column;" (click)="onCommitClick(commit)"
              [ngClass]="{'bg-blue-800': commit.isSelected}">
 
