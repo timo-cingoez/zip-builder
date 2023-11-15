@@ -30,7 +30,7 @@ export class FileService {
     return this.http.post<string[]>(`${this.baseUrl}${script}`, data);
   }
 
-  public download(filePath: string) {
+  public download(filePath: string, fileName: string) {
     const script = 'download-file.php';
     const url = `${this.baseUrl}${script}?filepath=${filePath}`;
 
@@ -55,7 +55,7 @@ export class FileService {
           const downloadLink = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = downloadLink;
-          a.download = filename;
+          a.download = `${fileName}.zip`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);

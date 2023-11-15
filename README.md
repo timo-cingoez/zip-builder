@@ -27,17 +27,12 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
 # TODO
-* fix API :)
+* add a toolbar or infobar at the top with version, excluded dirs, maybe environment info (maybe icons with tooltips)
 * parse commit files to FileData, maybe get the required info from api (extension, size) ?
 * find a way to call py script for commits from project or fetch the commits with JS (would also make parsing easier)
 * make custom logo that includes P4N
 * add inputs for commit since/until
-* fix zip/reset btn styling, add icons
 * add toast messages for actions
-* add input for final zip name (+api)
-* show ignored dirs
-* add unselectFile from searchedFiles (this means replace it with click handler)
-* auto-highlight commits if all corresponding files are selected
-* MAKE THE FIRST RELEASE!!!
+* fix API :)
 * far future: port to electron
 * far future: display files as tree? (probably useless / wont fit on screen)

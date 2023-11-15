@@ -9,9 +9,9 @@
 
 <div class="w-full flex flex-col items-center gap-2-5">
 
-  <div class="w-full flex flex-col items-center">
+  <div class="w-full flex flex-col items-center gap-2-5">
 
-    <span class="text-xl text-center h-14">Selected Files</span>
+    <span class="text-xl text-center">Selected Files</span>
 
     <cdk-virtual-scroll-viewport itemSize="20"
                                  class="selected-files viewport overflow-auto h-96 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
@@ -28,9 +28,27 @@
 
     </cdk-virtual-scroll-viewport>
 
-    <button (click)="reset()">Reset</button>
-    <button (click)="initZip()">Create ZIP</button>
 
+    <div class="flex flex-row gap-2-5">
+
+      <button (click)="reset()"
+              class="btn btn-reset bg-gray-300 text-lg text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer">
+        <span>Reset</span>
+        <img src="../assets/images/trash.png">
+      </button>
+
+      <button (click)="initZip()"
+              class="btn btn-create bg-gray-300 text-lg text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer">
+        <span>[ZIP!]</span>
+        <img src="../assets/images/magic.png">
+      </button>
+
+    </div>
+
+    <label>ZIP filename</label>
+    <input type="text" [(ngModel)]="zipName" placeholder="Update_151123" class="w-80">
+
+    <span>Excluded directories: {{ excludedDirs }}</span>
   </div>
 
   <div class="w-full flex flex-row gap-2-5">
@@ -50,7 +68,7 @@
 
         <div *cdkVirtualFor="let fileData of searchedFiles"
              class="item flex flex-row justify-between border-2 border-solid border-amber-700 text-gray-200 cursor-pointer bg-neutral-800 text-xl"
-             (click)="selectFile(fileData)"
+             (click)="onSearchedFileClick(fileData)"
              [ngClass]="{'bg-amber-800': fileData.isSelected}">
 
           {{ fileData.path }}

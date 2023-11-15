@@ -13,6 +13,8 @@ import {FileData} from "../types/file";
 export class AppComponent implements OnInit {
   public title: string = 'P4N Update-Builder v1.1';
 
+  public zipName: string = '';
+
   public availableCommits: Set<Commit> = new Set();
 
   public selectedFiles: Set<FileData> = new Set();
@@ -24,6 +26,37 @@ export class AppComponent implements OnInit {
   public searchResultCount: number = 0;
 
   public availableFilesCount: number = 0;
+
+  public excludedDirs = [
+    'DEBUG',
+    'dokumente',
+    'bilder',
+    'images',
+    'emoticons',
+    'log',
+    'dokumente_korrespondenz',
+    'img',
+    'Serienbriefe',
+    'export',
+    'temp',
+    'bdc posteingang',
+    '.git',
+    '.idea',
+    '.github',
+    '.tmb',
+    'mailbox_emails',
+    'stil',
+    'faq',
+    'sensus',
+    '.gitignore',
+    'log.txt',
+    'vendor',
+    'leads',
+    '2.0',
+    'boersen',
+    'archive',
+    'lds'
+  ].join(', ');
 
   @ViewChild('downloadLink') downloadLink!: ElementRef;
 
@@ -84,10 +117,24 @@ export class AppComponent implements OnInit {
     }
   }
 
+  public onSearchedFileClick(fileData: FileData) {
+    if (fileData.isSelected) {
+      fileData.isSelected = false;
+      this.unselectFile(fileData);
+    } else {
+      fileData.isSelected = true;
+      this.selectFile(fileData);
+    }
+  }
+
   public selectFile(fileData: FileData): void {
     fileData.isSelected = true;
     this.selectedFiles.add(fileData);
     this.selectedFiles = new Set(this.selectedFiles);
+
+    for (const commit of this.availableCommits) {
+      commit.isSelected = commit.files.every(path => [...this.selectedFiles].some(obj => obj.path === path));
+    }
   }
 
   public unselectFile(fileData: FileData): void {
@@ -133,7 +180,7 @@ export class AppComponent implements OnInit {
     this.fileService.sendFiles(data).subscribe({
       next: (response) => {
         console.log('response', response);
-        this.fileService.download(response.filePaths.zip);
+        this.fileService.download(response.filePaths.zip, this.zipName || 'zip_builder_' + Date.now());
       },
       error: (error) => {
         console.error('error', error);
