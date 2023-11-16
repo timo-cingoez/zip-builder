@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FileService} from "../services/file.service";
 import {CommitService} from "../services/commit.service";
 import {Commit} from "../types/commit";
@@ -11,7 +11,15 @@ import {FileData} from "../types/file";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public title: string = 'P4N Update-Builder v1.1';
+  public title: string = 'P4N Update-Builder';
+
+  public version: string = 'v1.1';
+
+  public apiUrl: string = environment.baseUrl;
+
+  public rootDir: string = environment.rootDir;
+
+  public infoPanelVisible: boolean = false;
 
   public zipName: string = '';
 
@@ -200,5 +208,9 @@ export class AppComponent implements OnInit {
     for (const commit of this.availableCommits) {
       commit.isSelected = false;
     }
+  }
+
+  public toggleInfoPanelVisibility() {
+    this.infoPanelVisible = !this.infoPanelVisible;
   }
 }

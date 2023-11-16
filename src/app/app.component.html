@@ -1,27 +1,53 @@
-<header class="w-full flex flex-col items-center">
+<div
+  class="sticky top-0 z-40 w-full backdrop-blur flex-none" style="background-color: #323957;">
 
-  <img width="64" height="64" src="assets/images/zip-folder.png" alt="A zip folder icon.">
+  <div class="relative flex items-center py-4 mx-4">
 
-  <h1>{{ title }}</h1>
+    <div class="flex items-center gap-2-5">
 
-</header>
+      <img width="32" height="32" src="assets/images/zip-folder.png">
+
+      <span class="text-lg">{{ title }}</span>
+
+      <span class="text-xs bg-zinc-500 border-zinc-400 rounded-full py-1 px-3">{{ version }}</span>
+
+    </div>
+
+    <div class="ml-auto flex gap-5">
+
+      <a href="https://github.com/timo-cingoez/update-builder" target="_blank">
+        <img width="32" height="32" src="assets/images/github.png">
+      </a>
+
+      <img width="32" height="32" src="assets/images/settings.png" (click)="toggleInfoPanelVisibility()">
+
+      <div class="flex flex-col text-slate-500">
+        <span>API URL: {{ apiUrl }}</span>
+        <span>ROOT DIR: {{ rootDir }}</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 
 
 <div class="w-full flex flex-col items-center gap-2-5">
 
-  <div class="w-full flex flex-col items-center gap-2-5">
+  <div class="w-90 flex flex-col items-center gap-2-5">
 
     <span class="text-xl text-center">Selected Files</span>
 
     <cdk-virtual-scroll-viewport itemSize="20"
-                                 class="selected-files viewport overflow-auto h-96 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
+                                 class="selected-files viewport overflow-auto h-60 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
 
       <div *cdkVirtualFor="let fileData of selectedFiles"
-           class="item flex flex-row justify-between gap-3 border-2 border-solid border-lime-700 text-gray-200 cursor-pointer bg-neutral-800 text-xl"
+           class="item px-1 flex flex-row justify-between gap-3 border-2 border-solid border-lime-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
            (click)="unselectFile(fileData)">
 
-        <span>{{ fileData.path }}</span>
-        <span>{{ fileData.size }}</span>
+        <span class="flex items-center">{{ fileData.path }}</span>
+        <span class="flex items-center">{{ fileData.size }}</span>
         <img width="32" height="32" [src]="'assets/images/' + fileData.extension + '.png'" alt="file extension image">
 
       </div>
@@ -45,21 +71,25 @@
 
     </div>
 
-    <label>ZIP filename</label>
-    <input type="text" [(ngModel)]="zipName" placeholder="Update_151123" class="w-80">
+    <div class="flex gap-2-5">
+      <label>ZIP filename</label>
+      <input type="text" [(ngModel)]="zipName" placeholder="Update_151123" class="w-80">
+    </div>
+
 
     <span>Excluded directories: {{ excludedDirs }}</span>
   </div>
 
-  <div class="w-full flex flex-row gap-2-5">
+  <div class="w-90 flex flex-row gap-2-5">
 
     <div class="w-full flex flex-col items-center">
 
-      <div class="w-full flex flex-col items-center h-14">
+      <div class="w-full flex items-center justify-center gap-2-5 h-14">
 
-        <span class="text-xl text-center">Search for files ({{ searchResultCount }} results)</span>
         <input class="w-80" type="text" placeholder="Filename, e.g.: inc\User\Data.php"
                (input)="searchFiles($any($event.target).value)">
+        <span class="text-xl text-center">Search for files ({{ searchResultCount }} results)</span>
+
 
       </div>
 
@@ -67,7 +97,7 @@
                                    class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
 
         <div *cdkVirtualFor="let fileData of searchedFiles"
-             class="item flex flex-row justify-between border-2 border-solid border-amber-700 text-gray-200 cursor-pointer bg-neutral-800 text-xl"
+             class="item p-2 flex flex-row justify-between border-2 border-solid border-amber-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
              (click)="onSearchedFileClick(fileData)"
              [ngClass]="{'bg-amber-800': fileData.isSelected}">
 
@@ -93,7 +123,7 @@
                                    class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
 
         <div *cdkVirtualFor="let commit of availableCommits"
-             class="item border-2 border-solid border-blue-700 text-gray-200 cursor-pointer bg-neutral-800 text-xl"
+             class="item p-2 border-2 border-solid border-blue-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
              style="display: flex; flex-direction: column;" (click)="onCommitClick(commit)"
              [ngClass]="{'bg-blue-800': commit.isSelected}">
 
@@ -110,10 +140,7 @@
 
 </div>
 
-
-<!--<h3>Available Files {{ availableFilesCount }}</h3>-->
-<!--<cdk-virtual-scroll-viewport itemSize="30" class="viewport">-->
-<!--  <div *cdkVirtualFor="let filePath of availableFiles" class="item">-->
-<!--    {{ filePath }}-->
-<!--  </div>-->
-<!--</cdk-virtual-scroll-viewport>-->
+<div [class.block]="infoPanelVisible" class="info-panel">
+  Currently excluded directories:
+  {{ excludedDirs }}
+</div>

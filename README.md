@@ -27,7 +27,6 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
 # TODO
-* add a toolbar or infobar at the top with version, excluded dirs, maybe environment info (maybe icons with tooltips)
 * parse commit files to FileData, maybe get the required info from api (extension, size) ?
 * find a way to call py script for commits from project or fetch the commits with JS (would also make parsing easier)
 * make custom logo that includes P4N
