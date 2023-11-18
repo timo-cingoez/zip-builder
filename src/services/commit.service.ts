@@ -10,13 +10,26 @@ import {FileData} from "../types/file";
 })
 
 export class CommitService {
-  private baseUrl = environment.baseUrl;
+  private url: string = environment.apiUrl;
 
   constructor(private http: HttpClient) {
   }
 
-  public getCommits(): Observable<Commit[]> {
-    const url = `${this.baseUrl}get-commits.php`;
+  public getCommits(gitExecutablePath: string, repositoryPath: string, since: string = '1 day ago', until: string = 'now'): Observable<Commit[]> {
+    const params = {
+      'git_executable_path': gitExecutablePath,
+      'repository_path': repositoryPath,
+      'since': since,
+      'until': until
+    };
+
+    const queryString = Object.entries(params)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.url}get-commits.php?${queryString}`;
+    console.log('url', url);
+
     return this.http.get<CommitResponse>(url, {responseType: 'json'}).pipe(
       map((response: CommitResponse) => response.commits),
       map((commits: Commit[]) => commits.map(commit => ({...commit, isSelected: false}))),

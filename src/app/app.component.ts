@@ -15,11 +15,17 @@ export class AppComponent implements OnInit {
 
   public version: string = 'v1.1';
 
-  public apiUrl: string = environment.baseUrl;
+  public apiUrl: string = environment.apiUrl;
 
-  public rootDir: string = environment.rootDir;
+  public rootDir: string = environment.repositoryPath;
+
+  public commitSince: string = '1 day ago';
+
+  public commitUntil: string = 'now';
 
   public infoPanelVisible: boolean = false;
+
+  public gitInfoPanelVisible: boolean = false;
 
   public zipName: string = '';
 
@@ -77,7 +83,8 @@ export class AppComponent implements OnInit {
   }
 
   public initAvailableCommits() {
-    this.commitService.getCommits().subscribe({
+    this.availableCommits = new Set();
+    this.commitService.getCommits(environment.gitExecutablePath, environment.repositoryPath, this.commitSince, this.commitUntil).subscribe({
       next: (response: Commit[]) => {
         this.availableCommits = new Set(response);
       },
@@ -181,7 +188,7 @@ export class AppComponent implements OnInit {
 
     const data = {
       'action': 'BUILD_ZIP',
-      'rootDir': environment.rootDir,
+      'rootDir': environment.repositoryPath,
       'files': files
     };
 
@@ -212,5 +219,9 @@ export class AppComponent implements OnInit {
 
   public toggleInfoPanelVisibility() {
     this.infoPanelVisible = !this.infoPanelVisible;
+  }
+
+  public toggleGitPanelVisibility() {
+    this.gitInfoPanelVisible = !this.gitInfoPanelVisible;
   }
 }

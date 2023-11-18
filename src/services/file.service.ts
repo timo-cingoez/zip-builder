@@ -8,7 +8,7 @@ import {FileData} from "../types/file";
   providedIn: 'root',
 })
 export class FileService {
-  private baseUrl = environment.baseUrl;
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {
   }
