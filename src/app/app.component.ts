@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
 
   public gitInfoPanelVisible: boolean = false;
 
-  public zipName: string = '';
+  public zipName: string = 'zip_builder_' + new Date().getTime();
 
   public availableCommits: Set<Commit> = new Set();
 
@@ -166,11 +166,13 @@ export class AppComponent implements OnInit {
   public searchFiles(searchText: any) {
     this.searchedFiles = new Set();
 
-    this.fileDataList.forEach((fileData: FileData) => {
-      if (fileData.path.includes(searchText)) {
-        this.searchedFiles.add(fileData);
-      }
-    });
+    if (searchText) {
+      this.fileDataList.forEach((fileData: FileData) => {
+        if (fileData.path.includes(searchText)) {
+          this.searchedFiles.add(fileData);
+        }
+      });
+    }
 
     this.searchResultCount = this.searchedFiles.size;
 
@@ -195,7 +197,7 @@ export class AppComponent implements OnInit {
     this.fileService.sendFiles(data).subscribe({
       next: (response) => {
         console.log('response', response);
-        this.fileService.download(response.filePaths.zip, this.zipName || 'zip_builder_' + Date.now());
+        this.fileService.download(response.filePaths.zip, this.zipName);
       },
       error: (error) => {
         console.error('error', error);

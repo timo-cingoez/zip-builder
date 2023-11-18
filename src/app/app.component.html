@@ -1,5 +1,5 @@
 <div
-  class="sticky top-0 z-40 w-full backdrop-blur flex-none" style="background-color: #323957;">
+  class="sticky top-0 z-40 w-full backdrop-blur flex-none mb-3" style="background-color: #323957;">
 
   <div class="relative flex items-center py-4 mx-4">
 
@@ -33,122 +33,139 @@
 </div>
 
 
-<div class="w-full flex flex-col items-center gap-2-5">
+<div class="w-full flex flex-col items-center gap-2-5 mb-3">
 
   <div class="w-90 flex flex-col items-center gap-2-5">
 
-    <span class="text-xl text-center">Selected Files</span>
+    <ng-container *ngIf="selectedFiles.size; else noSelectedFiles">
 
-    <cdk-virtual-scroll-viewport itemSize="20"
-                                 class="selected-files viewport overflow-auto h-60 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
+      <cdk-virtual-scroll-viewport itemSize="20"
+                                   class="selected-files overflow-auto h-60 w-full bg-zinc-900 border-2 border-solid border-zinc-400">
 
-      <div *cdkVirtualFor="let fileData of selectedFiles"
-           class="item px-1 flex flex-row justify-between gap-3 border-2 border-solid border-lime-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
-           (click)="unselectFile(fileData)">
+        <div *cdkVirtualFor="let fileData of selectedFiles"
+             class="item px-1 flex flex-row justify-between gap-3 border-2 border-solid border-lime-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
+             (click)="unselectFile(fileData)">
 
-        <span class="flex items-center">{{ fileData.path }}</span>
-        <span class="flex items-center">{{ fileData.size }}</span>
-        <img width="32" height="32" [src]="'assets/images/' + fileData.extension + '.png'" alt="file extension image">
-
-      </div>
-
-    </cdk-virtual-scroll-viewport>
-
-
-    <div class="flex flex-row gap-2-5">
-
-      <button (click)="reset()"
-              class="btn btn-reset bg-gray-300 text-lg text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer">
-        <span>Reset</span>
-        <img src="../assets/images/trash.png">
-      </button>
-
-      <button (click)="initZip()"
-              class="btn btn-create bg-gray-300 text-lg text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer">
-        <span>[ZIP!]</span>
-        <img src="../assets/images/magic.png">
-      </button>
-
-    </div>
-
-    <div class="flex gap-2-5">
-      <label>ZIP filename</label>
-      <input type="text" [(ngModel)]="zipName" placeholder="Update_151123" class="w-80">
-    </div>
-
-  </div>
-
-  <div class="w-90 flex flex-row gap-2-5">
-
-    <div class="w-full flex flex-col items-center">
-
-      <div class="w-full flex items-center justify-center gap-2-5 h-14">
-
-        <input class="w-80" type="text" placeholder="Filename, e.g.: inc\User\Data.php"
-               (input)="searchFiles($any($event.target).value)">
-        <span class="text-xl text-center">Search for files ({{ searchResultCount }} results)</span>
-
-
-      </div>
-
-      <cdk-virtual-scroll-viewport itemSize="30"
-                                   class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
-
-        <div *cdkVirtualFor="let fileData of searchedFiles"
-             class="item p-2 flex flex-row justify-between border-2 border-solid border-amber-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
-             (click)="onSearchedFileClick(fileData)"
-             [ngClass]="{'bg-amber-800': fileData.isSelected}">
-
-          {{ fileData.path }}
+          <span class="flex items-center">{{ fileData.path }}</span>
+          <span class="flex items-center">{{ fileData.size }}</span>
           <img width="32" height="32" [src]="'assets/images/' + fileData.extension + '.png'" alt="file extension image">
 
         </div>
 
       </cdk-virtual-scroll-viewport>
 
-    </div>
+    </ng-container>
 
-    <div class="w-full flex flex-col">
 
-      <div class="w-full flex flex-col items-center h-14">
+    <div class="flex flex-row gap-2-5">
 
-        <div>
+      <button (click)="reset()"
+              class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer">
+        <span>Reset</span>
+        <img width="16" height="16" src="../assets/images/reset.png">
+      </button>
 
-          <span class="text-xl text-center h-14">Commits</span>
-
-          <button (click)="toggleGitPanelVisibility()">info</button>
-          <button (click)="initAvailableCommits()">GET</button>
-
-        </div>
-
-        <div>
-
-          <input type="text" [(ngModel)]="commitSince" placeholder="YYYY-MM-DD / 1 day ago">
-          <input type="text" [(ngModel)]="commitUntil" placeholder="YYYY-MM-DD / now">
-
-        </div>
-
-      </div>
-
-      <cdk-virtual-scroll-viewport itemSize="30"
-                                   class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
-
-        <div *cdkVirtualFor="let commit of availableCommits"
-             class="item p-2 border-2 border-solid border-blue-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
-             style="display: flex; flex-direction: column;" (click)="onCommitClick(commit)"
-             [ngClass]="{'bg-blue-800': commit.isSelected}">
-
-          <span>{{ commit.sha }} - {{ commit.author }} - {{ commit.datetime }}</span>
-          <span>{{ commit.message }}</span>
-
-        </div>
-
-      </cdk-virtual-scroll-viewport>
+      <button (click)="initZip()"
+              class="btn btn-create bg-gray-300 text-base text-gray-800 font-bold py-1 px-3 rounded inline-flex items-center gap-2-5 cursor-pointer">
+        <span>[ZIP!]</span>
+        <img width="16" height="16" src="../assets/images/magic.png">
+      </button>
 
     </div>
 
   </div>
 
+  <div class="w-90 flex flex-row gap-2-5 mb-3">
+
+    <div class="w-full flex flex-col items-center">
+
+      <div class="w-full flex flex-col h-14 items-center justify-center">
+
+        <label>Search for files ({{ searchResultCount }} results)</label>
+        <input class="w-80" type="text" placeholder="Filename, e.g.: inc/User/Data.php"
+               (input)="searchFiles($any($event.target).value)">
+
+      </div>
+
+      <ng-container *ngIf="searchedFiles.size; else noSearchedFiles">
+
+        <cdk-virtual-scroll-viewport itemSize="30"
+                                     class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400">
+
+          <div *cdkVirtualFor="let fileData of searchedFiles"
+               class="item p-2 flex flex-row justify-between border-2 border-solid border-amber-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
+               (click)="onSearchedFileClick(fileData)"
+               [ngClass]="{'bg-amber-800': fileData.isSelected}">
+
+            {{ fileData.path }}
+            <img width="32" height="32" [src]="'assets/images/' + fileData.extension + '.png'"
+                 alt="file extension image">
+
+          </div>
+
+        </cdk-virtual-scroll-viewport>
+
+      </ng-container>
+
+    </div>
+
+    <div class="w-full flex flex-col">
+
+      <div class="w-full flex items-center justify-center h-14 gap-2-5">
+
+        <div class="flex flex-col">
+          <label>Since</label>
+          <input type="text" [(ngModel)]="commitSince" placeholder="YYYY-MM-DD / 1 day ago">
+        </div>
+
+        <div class="flex flex-col">
+          <label>Until</label>
+          <input type="text" [(ngModel)]="commitUntil" placeholder="YYYY-MM-DD / now">
+        </div>
+
+        <div class="flex">
+
+          <button
+            class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer"
+            (click)="toggleGitPanelVisibility()">info
+          </button>
+          <button
+            class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer"
+            (click)="initAvailableCommits()">GET
+          </button>
+
+        </div>
+
+      </div>
+
+      <ng-container *ngIf="availableCommits.size; else noCommits">
+
+        <cdk-virtual-scroll-viewport itemSize="30"
+                                     class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400">
+
+          <div *cdkVirtualFor="let commit of availableCommits"
+               class="item p-2 border-2 border-solid border-blue-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
+               style="display: flex; flex-direction: column;" (click)="onCommitClick(commit)"
+               [ngClass]="{'bg-blue-800': commit.isSelected}">
+
+            <span>{{ commit.sha }} - {{ commit.author }} - {{ commit.datetime }}</span>
+            <span>{{ commit.message }}</span>
+
+          </div>
+
+        </cdk-virtual-scroll-viewport>
+
+      </ng-container>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="flex flex-col gap-2-5 w-full items-center justify-center">
+  <label>ZIP filename</label>
+  <input type="text" [(ngModel)]="zipName" placeholder="Update_151123" class="w-80">
 </div>
 
 <div [class.block]="infoPanelVisible" class="info-panel">
@@ -195,3 +212,33 @@
   </div>
 
 </div>
+
+
+<ng-template #noSelectedFiles>
+
+  <div
+    class="flex items-center justify-center h-60 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
+    <span class="text-xl text-slate-500">Selected Files</span>
+  </div>
+
+</ng-template>
+
+
+<ng-template #noCommits>
+
+  <div
+    class="flex items-center justify-center h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
+    <span class="text-xl text-slate-500">Commits</span>
+  </div>
+
+</ng-template>
+
+
+<ng-template #noSearchedFiles>
+
+  <div
+    class="flex items-center justify-center h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
+    <span class="text-xl text-slate-500">Search Files</span>
+  </div>
+
+</ng-template>
