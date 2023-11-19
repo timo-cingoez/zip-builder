@@ -143,15 +143,34 @@
         <cdk-virtual-scroll-viewport itemSize="30"
                                      class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400">
 
-          <div *cdkVirtualFor="let commit of availableCommits"
-               class="item p-2 border-2 border-solid border-blue-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
-               style="display: flex; flex-direction: column;" (click)="onCommitClick(commit)"
-               [ngClass]="{'bg-blue-800': commit.isSelected}">
+          <fieldset *cdkVirtualFor="let commit of availableCommits"
+                    class="item p-2 border-2 border-solid border-blue-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
+                    (click)="onCommitClick(commit)"
+                    [ngClass]="{'bg-blue-950': commit.isSelected}">
 
-            <span>{{ commit.sha }} - {{ commit.author }} - {{ commit.datetime }}</span>
+            <legend class="flex gap-3">
+              <span
+                class="text-xs bg-zinc-500 border-zinc-400 rounded-full py-1 px-3 w-fit">{{commit.sha}}</span>
+              <span
+                class="text-xs bg-emerald-600 border-zinc-400 rounded-full py-1 px-3 w-fit font-bold">{{commit.datetime}}</span>
+              <span
+                class="text-xs bg-rose-700 border-zinc-400 rounded-full py-1 px-3 w-fit font-bold">{{commit.author}}</span>
+            </legend>
+
+            <!--            <div class="flex justify-between mb-3">-->
+
+            <!--              <div class="flex w-33 justify-end">-->
+            <!--                <span class="text-base font-bold whitespace-nowrap">{{ commit.datetime }}</span>-->
+            <!--              </div>-->
+            <!--              <div class="flex w-33 justify-end">-->
+            <!--                <span class="text-base font-bold whitespace-nowrap">{{ commit.author }}</span>-->
+            <!--              </div>-->
+
+            <!--            </div>-->
+
             <span>{{ commit.message }}</span>
 
-          </div>
+          </fieldset>
 
         </cdk-virtual-scroll-viewport>
 
