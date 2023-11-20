@@ -22,8 +22,7 @@
       <img width="32" height="32" src="assets/images/settings.png" (click)="toggleInfoPanelVisibility()">
 
       <div class="flex flex-col text-slate-500">
-        <span>API URL: {{ apiUrl }}</span>
-        <span>ROOT DIR: {{ rootDir }}</span>
+        <span>Repository: {{ repositoryPath }}</span>
       </div>
 
     </div>
@@ -37,20 +36,33 @@
 
   <div class="w-90 flex flex-col items-center gap-2-5">
 
+    <div class="flex gap-2-5">
+      <span class="text-xs bg-sky-700 border-zinc-400 rounded-full py-1 px-3 w-fit font-bold">File Size</span>
+      <span class="text-xs bg-purple-700 border-zinc-400 rounded-full py-1 px-3 w-fit font-bold">Last Modified</span>
+    </div>
+
     <ng-container *ngIf="selectedFiles.size; else noSelectedFiles">
 
       <cdk-virtual-scroll-viewport itemSize="20"
                                    class="selected-files overflow-auto h-60 w-full bg-zinc-900 border-2 border-solid border-zinc-400">
 
-        <div *cdkVirtualFor="let fileData of selectedFiles"
-             class="item px-1 flex flex-row justify-between gap-3 border-2 border-solid border-lime-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
-             (click)="unselectFile(fileData)">
+        <fieldset *cdkVirtualFor="let fileData of selectedFiles"
+                  class="item px-1 flex flex-row justify-between gap-3 border-2 border-solid border-lime-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
+                  (click)="unselectFile(fileData)">
+
+          <legend class="flex gap-3">
+            <span
+              class="text-xs bg-sky-700 border-zinc-400 rounded-full py-1 px-3 w-fit h-fit font-bold">{{fileData.size}}</span>
+            <span
+              class="text-xs bg-purple-700 border-zinc-400 rounded-full py-1 px-3 w-fit h-fit font-bold">{{fileData.lastChange}}</span>
+          </legend>
 
           <span class="flex items-center">{{ fileData.path }}</span>
-          <span class="flex items-center">{{ fileData.size }}</span>
-          <img width="32" height="32" [src]="'assets/images/' + fileData.extension + '.png'" alt="file extension image">
 
-        </div>
+          <img width="32" height="32" [src]="'assets/images/file_extensions/' + fileData.extension + '.png'"
+               alt="file extension image">
+
+        </fieldset>
 
       </cdk-virtual-scroll-viewport>
 
@@ -62,13 +74,13 @@
       <button (click)="reset()"
               class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer">
         <span>Reset</span>
-        <img width="16" height="16" src="../assets/images/reset.png">
+        <img width="16" height="16" src="assets/images/reset.png">
       </button>
 
       <button (click)="initZip()"
               class="btn btn-create bg-gray-300 text-base text-gray-800 font-bold py-1 px-3 rounded inline-flex items-center gap-2-5 cursor-pointer">
         <span>[ZIP!]</span>
-        <img width="16" height="16" src="../assets/images/magic.png">
+        <img width="16" height="16" src="assets/images/magic.png">
       </button>
 
     </div>
@@ -79,13 +91,7 @@
 
     <div class="w-full flex flex-col items-center">
 
-      <div class="w-full flex flex-col h-14 items-center justify-center">
-
-        <label>Search for files ({{ searchResultCount }} results)</label>
-        <input class="w-80" type="text" placeholder="Filename, e.g.: inc/User/Data.php"
-               (input)="searchFiles($any($event.target).value)">
-
-      </div>
+      <div class="w-full h-6 mb-2-5"></div>
 
       <ng-container *ngIf="searchedFiles.size; else noSearchedFiles">
 
@@ -98,7 +104,7 @@
                [ngClass]="{'bg-amber-800': fileData.isSelected}">
 
             {{ fileData.path }}
-            <img width="32" height="32" [src]="'assets/images/' + fileData.extension + '.png'"
+            <img width="32" height="32" [src]="'assets/images/file_extensions/' + fileData.extension + '.png'"
                  alt="file extension image">
 
           </div>
@@ -107,35 +113,22 @@
 
       </ng-container>
 
+      <div class="w-full flex flex-col h-14 items-center justify-center">
+
+        <label>Search for files ({{ searchResultCount }} results)</label>
+        <input class="w-56" type="text" placeholder="Filename, e.g.: inc/User/Data.php"
+               (input)="searchFiles($any($event.target).value)">
+
+      </div>
+
     </div>
 
     <div class="w-full flex flex-col">
 
-      <div class="w-full flex items-center justify-center h-14 gap-2-5">
-
-        <div class="flex flex-col">
-          <label>Since</label>
-          <input type="text" [(ngModel)]="commitSince" placeholder="YYYY-MM-DD / 1 day ago">
-        </div>
-
-        <div class="flex flex-col">
-          <label>Until</label>
-          <input type="text" [(ngModel)]="commitUntil" placeholder="YYYY-MM-DD / now">
-        </div>
-
-        <div class="flex">
-
-          <button
-            class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer"
-            (click)="toggleGitPanelVisibility()">info
-          </button>
-          <button
-            class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer"
-            (click)="initAvailableCommits()">GET
-          </button>
-
-        </div>
-
+      <div class="flex gap-2-5 w-full justify-center mb-2-5 h-6">
+        <span class="text-xs bg-zinc-500 border-zinc-400 rounded-full py-1 px-3 w-fit font-bold">SHA</span>
+        <span class="text-xs bg-emerald-600 border-zinc-400 rounded-full py-1 px-3 w-fit font-bold">Date</span>
+        <span class="text-xs bg-rose-700 border-zinc-400 rounded-full py-1 px-3 w-fit font-bold">Author</span>
       </div>
 
       <ng-container *ngIf="availableCommits.size; else noCommits">
@@ -157,17 +150,6 @@
                 class="text-xs bg-rose-700 border-zinc-400 rounded-full py-1 px-3 w-fit font-bold">{{commit.author}}</span>
             </legend>
 
-            <!--            <div class="flex justify-between mb-3">-->
-
-            <!--              <div class="flex w-33 justify-end">-->
-            <!--                <span class="text-base font-bold whitespace-nowrap">{{ commit.datetime }}</span>-->
-            <!--              </div>-->
-            <!--              <div class="flex w-33 justify-end">-->
-            <!--                <span class="text-base font-bold whitespace-nowrap">{{ commit.author }}</span>-->
-            <!--              </div>-->
-
-            <!--            </div>-->
-
             <span>{{ commit.message }}</span>
 
           </fieldset>
@@ -175,6 +157,33 @@
         </cdk-virtual-scroll-viewport>
 
       </ng-container>
+
+      <div class="w-full flex items-center justify-center h-14 gap-2-5">
+
+        <div class="flex flex-col">
+          <label>Since</label>
+          <input type="text" [(ngModel)]="commitSince" placeholder="YYYY-MM-DD / 1 day ago">
+        </div>
+
+        <div class="flex flex-col">
+          <label>Until</label>
+          <input type="text" [(ngModel)]="commitUntil" placeholder="YYYY-MM-DD / now">
+        </div>
+
+        <div class="flex">
+
+          <button
+            class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer"
+            (click)="toggleGitPanelVisibility()">Help
+          </button>
+          <button
+            class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer"
+            (click)="initAvailableCommits()">Query
+          </button>
+
+        </div>
+
+      </div>
 
     </div>
 

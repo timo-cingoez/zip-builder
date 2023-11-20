@@ -1,9 +1,9 @@
-import {Component, ElementRef, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FileService} from "../services/file.service";
 import {CommitService} from "../services/commit.service";
 import {Commit} from "../types/commit";
-import {environment} from "../environments/environment";
 import {FileData} from "../types/file";
+import {ConfigService} from "../services/config.service";
 
 @Component({
   selector: 'app-root',
@@ -15,9 +15,7 @@ export class AppComponent implements OnInit {
 
   public version: string = 'v1.1';
 
-  public apiUrl: string = environment.apiUrl;
-
-  public rootDir: string = environment.repositoryPath;
+  public repositoryPath: string;
 
   public commitSince: string = '1 day ago';
 
@@ -72,9 +70,12 @@ export class AppComponent implements OnInit {
     'lds'
   ].join(', ');
 
-  @ViewChild('downloadLink') downloadLink!: ElementRef;
-
-  constructor(private fileService: FileService, private commitService: CommitService) {
+  constructor(
+    private fileService: FileService,
+    private commitService: CommitService,
+    private configService: ConfigService
+  ) {
+    this.repositoryPath = this.configService.getRepositoryPath();
   }
 
   public ngOnInit() {
@@ -84,17 +85,23 @@ export class AppComponent implements OnInit {
 
   public initAvailableCommits() {
     this.availableCommits = new Set();
-    this.commitService.getCommits(environment.gitExecutablePath, environment.repositoryPath, this.commitSince, this.commitUntil).subscribe({
-      next: (response: Commit[]) => {
-        this.availableCommits = new Set(response);
-      },
-      error: (error) => {
-        console.error('Error fetching commits:', error);
-      },
-      complete: () => {
-        console.log('initAvailableCommits finished');
-      },
-    });
+    this.commitService.getCommits(
+      this.configService.getGitExecutablePath(),
+      this.configService.getRepositoryPath(),
+      this.commitSince,
+      this.commitUntil
+    )
+      .subscribe({
+        next: (response: Commit[]) => {
+          this.availableCommits = new Set(response);
+        },
+        error: (error) => {
+          console.error('Error fetching commits:', error);
+        },
+        complete: () => {
+          console.log('initAvailableCommits finished');
+        },
+      });
   }
 
   public initFileDataList(): void {
@@ -190,7 +197,7 @@ export class AppComponent implements OnInit {
 
     const data = {
       'action': 'BUILD_ZIP',
-      'rootDir': environment.repositoryPath,
+      'rootDir': this.configService.getRepositoryPath(),
       'files': files
     };
 
@@ -217,6 +224,7 @@ export class AppComponent implements OnInit {
     for (const commit of this.availableCommits) {
       commit.isSelected = false;
     }
+    this.zipName = 'zip_builder_' + new Date().getTime();
   }
 
   public toggleInfoPanelVisibility() {

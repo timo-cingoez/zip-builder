@@ -41,8 +41,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Ignore environment configuration files
+# Ignore configuration files
 /src/environments/environment.ts
+/src/assets/config.json
 
 # Temp
 /src/temp/*

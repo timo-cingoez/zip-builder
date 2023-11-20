@@ -1,16 +1,17 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {catchError, map, Observable, tap, throwError} from 'rxjs';
-import {environment} from "../environments/environment";
 import {FileData} from "../types/file";
+import {ConfigService} from "./config.service";
 
 @Injectable({
   providedIn: 'root',
 })
 export class FileService {
-  private baseUrl = environment.apiUrl;
+  private readonly baseUrl;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private configService: ConfigService) {
+    this.baseUrl = configService.getApiUrl();
   }
 
   public getAvailableFiles(): Observable<FileData[]> {

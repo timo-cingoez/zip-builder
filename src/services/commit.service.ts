@@ -2,17 +2,16 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, map, Observable, tap, throwError} from 'rxjs';
 import {Commit} from "../types/commit";
-import {environment} from "../environments/environment";
-import {FileData} from "../types/file";
+import {ConfigService} from "./config.service";
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class CommitService {
-  private url: string = environment.apiUrl;
+  private readonly url: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private configService: ConfigService) {
+    this.url = configService.getApiUrl();
   }
 
   public getCommits(gitExecutablePath: string, repositoryPath: string, since: string = '1 day ago', until: string = 'now'): Observable<Commit[]> {
