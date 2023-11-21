@@ -14,8 +14,8 @@ export class FileService {
     this.baseUrl = configService.getApiUrl();
   }
 
-  public getAvailableFiles(): Observable<FileData[]> {
-    const url = `${this.baseUrl}get-files.php`;
+  public getAvailableFiles(repositoryPath: string): Observable<FileData[]> {
+    const url = `${this.baseUrl}get-files.php?repository_path=${repositoryPath}`;
     return this.http.get<FileDataResponse>(url, {responseType: 'json'}).pipe(
       map((response: FileDataResponse) => response.files),
       map((files: FileData[]) => files.map(file => ({...file, isSelected: false}))),

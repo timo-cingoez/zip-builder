@@ -105,7 +105,7 @@ export class AppComponent implements OnInit {
   }
 
   public initFileDataList(): void {
-    this.fileService.getAvailableFiles().subscribe({
+    this.fileService.getAvailableFiles(this.configService.getRepositoryPath()).subscribe({
       next: (files) => {
         this.fileDataList = files;
         this.availableFilesCount = this.fileDataList.length;
