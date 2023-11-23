@@ -294,6 +294,10 @@
   height: 40.625rem; /* 650px */
 }
 
+.h-450 {
+  height: 30.625rem; /* 650px */
+}
+
 .max-h-48 {
   max-height: 12rem; /* 192px */
 }

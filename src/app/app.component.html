@@ -99,7 +99,7 @@
       <ng-container *ngIf="searchedFiles.size; else noSearchedFiles">
 
         <cdk-virtual-scroll-viewport itemSize="30"
-                                     class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400">
+                                     class="viewport overflow-auto h-450 w-full bg-zinc-900 border-2 border-solid border-zinc-400">
 
           <div *cdkVirtualFor="let fileData of searchedFiles"
                class="item p-2 flex flex-row justify-between border-2 border-solid border-amber-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
@@ -122,7 +122,7 @@
       <div class="w-full flex flex-col h-14 items-center justify-center">
 
         <label>Search for files ({{ searchResultCount }} results)</label>
-        <input class="w-56" type="text" placeholder="Filename, e.g.: inc/User/Data.php"
+        <input class="w-80 text-lg" type="text" placeholder="Filename, e.g.: inc/User/Data.php"
                (input)="searchFiles($any($event.target).value)">
 
       </div>
@@ -140,7 +140,7 @@
       <ng-container *ngIf="availableCommits.size; else noCommits">
 
         <cdk-virtual-scroll-viewport itemSize="30"
-                                     class="viewport overflow-auto h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400">
+                                     class="viewport overflow-auto h-450 w-full bg-zinc-900 border-2 border-solid border-zinc-400">
 
           <fieldset *cdkVirtualFor="let commit of availableCommits"
                     class="item p-2 border-2 border-solid border-blue-700 text-gray-200 cursor-pointer bg-neutral-800 text-base"
@@ -168,12 +168,12 @@
 
         <div class="flex flex-col">
           <label>Since</label>
-          <input type="text" [(ngModel)]="commitSince" placeholder="YYYY-MM-DD / 1 day ago">
+          <input class="text-lg" type="text" [(ngModel)]="commitSince" placeholder="YYYY-MM-DD / 1 day ago">
         </div>
 
         <div class="flex flex-col">
           <label>Until</label>
-          <input type="text" [(ngModel)]="commitUntil" placeholder="YYYY-MM-DD / now">
+          <input class="text-lg" type="text text-lg" [(ngModel)]="commitUntil" placeholder="YYYY-MM-DD / now">
         </div>
 
         <div class="flex">
@@ -199,7 +199,7 @@
 
 <div class="flex flex-col gap-2-5 w-full items-center justify-center">
   <label>ZIP filename</label>
-  <input type="text" [(ngModel)]="zipName" placeholder="Update_151123" class="w-80">
+  <input type="text" [(ngModel)]="zipName" placeholder="Update_151123" class="w-80 text-lg">
 </div>
 
 <div [class.block]="infoPanelVisible" class="info-panel">
@@ -261,7 +261,7 @@
 <ng-template #noCommits>
 
   <div
-    class="flex items-center justify-center h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
+    class="flex items-center justify-center h-450 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
     <span class="text-xl text-slate-500">Commits</span>
   </div>
 
@@ -271,7 +271,7 @@
 <ng-template #noSearchedFiles>
 
   <div
-    class="flex items-center justify-center h-650 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
+    class="flex items-center justify-center h-450 w-full bg-zinc-900 border-2 border-solid border-zinc-400 rounded-md">
     <span class="text-xl text-slate-500">Search Files</span>
   </div>
 
