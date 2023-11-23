@@ -70,6 +70,20 @@ export class AppComponent implements OnInit {
     'lds'
   ].join(', ');
 
+  public supportedExtensionImages = [
+    'css',
+    'gif',
+    'html',
+    'php',
+    'jpg',
+    'png',
+    'js',
+    'json',
+    'phtml',
+    'txt',
+    'xml'
+  ];
+
   constructor(
     private fileService: FileService,
     private commitService: CommitService,
@@ -233,5 +247,9 @@ export class AppComponent implements OnInit {
 
   public toggleGitPanelVisibility() {
     this.gitInfoPanelVisible = !this.gitInfoPanelVisible;
+  }
+
+  public doesExtensionImageExist(extension: string) {
+    return this.supportedExtensionImages.includes(extension);
   }
 }

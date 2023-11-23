@@ -44,7 +44,17 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "/zip-builder/"
+              "baseHref": "/zip-builder/",
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "src/assets/",
+                  "ignore": [
+                    "**/config.json"
+                  ],
+                  "output": "/assets/"
+                }
+              ]
             },
             "development": {
               "buildOptimizer": false,
