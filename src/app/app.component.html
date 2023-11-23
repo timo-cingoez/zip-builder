@@ -107,8 +107,11 @@
                [ngClass]="{'bg-amber-800': fileData.isSelected}">
 
             {{ fileData.path }}
-            <img width="32" height="32" [src]="'assets/images/file_extensions/' + fileData.extension + '.png'"
-                 alt="file extension image">
+            <ng-container *ngIf="doesExtensionImageExist(fileData.extension)">
+              <img width="32" height="32"
+                   [src]="'assets/images/file_extensions/' + fileData.extension + '.png'"
+                   alt="file extension image">
+            </ng-container>
 
           </div>
 
