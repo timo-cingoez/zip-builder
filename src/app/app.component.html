@@ -227,7 +227,7 @@
   Amount of available files: {{ availableFilesCount }}
 </div>
 
-<div [class.block]="gitInfoPanelVisible" class="info-panel">
+<div [class.block]="gitInfoPanelVisible" class="info-panel overflow-auto h-450">
 
   <div class="flex flex-col gap-2-5">
 
@@ -259,6 +259,23 @@
       </li>
 
     </ul>
+
+  </div>
+
+  <div class="flex flex-col gap-2-5">
+
+    <span>Authors</span>
+
+
+    <ul *ngIf="commitAuthors.size; else commitAuthorsElse">
+
+      <li *ngFor="let author of commitAuthors">
+        {{ author }}
+      </li>
+
+    </ul>
+
+    <ng-template #commitAuthorsElse>Fetching...</ng-template>
 
   </div>
 

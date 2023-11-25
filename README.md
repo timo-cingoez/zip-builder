@@ -27,13 +27,9 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
 # TODO
-* parse commit files to FileData, maybe get the required info from api (extension, size) ?
-* find a way to call py script for commits from project or fetch the commits with JS (would also make parsing easier)
-* make custom logo that includes P4N
-* add inputs for commit since/until
 * add toast messages for actions
 * fix API :)
-* far future: port to electron
-* far future: display files as tree? (probably useless / wont fit on screen)
-* add a list of available authors from the repository (fetch from api during app init)
 * add a global debug var to bind logs, especially in requests with big responses
+
+# FUTURE
+* port to electron

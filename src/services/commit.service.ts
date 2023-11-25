@@ -19,6 +19,7 @@ export class CommitService {
     const params = {
       'git_executable_path': gitExecutablePath,
       'repository_path': repositoryPath,
+      'action': 'commits',
       ...args
     };
     console.log('getCommits - params', params);
@@ -34,6 +35,28 @@ export class CommitService {
       map((response: CommitResponse) => response.commits),
       map((commits: Commit[]) => commits.map(commit => ({...commit, isSelected: false}))),
       tap((commits: Commit[]) => console.log('Parsed Commits:', commits)),
+      catchError(this.handleError)
+    );
+  }
+
+  public getAuthors(gitExecutablePath: string, repositoryPath: string) {
+    const params = {
+      'git_executable_path': gitExecutablePath,
+      'repository_path': repositoryPath,
+      'action': 'authors'
+    };
+    console.log('getAuthors - params', params);
+
+    const queryString = Object.entries(params)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${this.url}get-commits.php?${queryString}`;
+    console.log('getAuthors - url', url);
+
+    return this.http.get<string[]>(url, {responseType: 'json'}).pipe(
+      map((response: string[]) => response),
+      tap((authors) => console.log('Parsed Authors:', authors)),
       catchError(this.handleError)
     );
   }

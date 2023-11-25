@@ -35,6 +35,8 @@ export class AppComponent implements OnInit {
 
   public availableCommits: Set<Commit> = new Set();
 
+  public commitAuthors: Set<string> = new Set();
+
   public selectedFiles: Set<FileData> = new Set();
 
   public fileDataList: FileData[] = [];
@@ -101,6 +103,7 @@ export class AppComponent implements OnInit {
   public ngOnInit() {
     this.initFileDataList();
     this.initAvailableCommits();
+    this.initCommitAuthors();
   }
 
   public initAvailableCommits() {
@@ -294,5 +297,23 @@ export class AppComponent implements OnInit {
       }
     }
     this.allCommitsSelected = allCommitsSelected;
+  }
+
+  public initCommitAuthors() {
+    this.commitService.getAuthors(
+      this.configService.getGitExecutablePath(),
+      this.configService.getRepositoryPath()
+    )
+      .subscribe({
+        next: (response: string[]) => {
+          this.commitAuthors = new Set(response);
+        },
+        error: (error) => {
+          console.error('Error fetching authors:', error);
+        },
+        complete: () => {
+          console.log('initCommitAuthors finished');
+        },
+      });
   }
 }
