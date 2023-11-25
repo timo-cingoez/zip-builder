@@ -3,6 +3,7 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, map, Observable, tap, throwError} from 'rxjs';
 import {Commit} from "../types/commit";
 import {ConfigService} from "./config.service";
+import {GitLogOptions} from "../types/gitlogoptions";
 
 @Injectable({
   providedIn: 'root',
@@ -14,20 +15,20 @@ export class CommitService {
     this.url = configService.getApiUrl();
   }
 
-  public getCommits(gitExecutablePath: string, repositoryPath: string, since: string = '1 day ago', until: string = 'now'): Observable<Commit[]> {
+  public getCommits(gitExecutablePath: string, repositoryPath: string, args: GitLogOptions): Observable<Commit[]> {
     const params = {
       'git_executable_path': gitExecutablePath,
       'repository_path': repositoryPath,
-      'since': since,
-      'until': until
+      ...args
     };
+    console.log('getCommits - params', params);
 
     const queryString = Object.entries(params)
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
 
     const url = `${this.url}get-commits.php?${queryString}`;
-    console.log('url', url);
+    console.log('getCommits - url', url);
 
     return this.http.get<CommitResponse>(url, {responseType: 'json'}).pipe(
       map((response: CommitResponse) => response.commits),

@@ -4,6 +4,7 @@ import {CommitService} from "../services/commit.service";
 import {Commit} from "../types/commit";
 import {FileData} from "../types/file";
 import {ConfigService} from "../services/config.service";
+import {GitLogOptions} from "../types/gitlogoptions";
 
 @Component({
   selector: 'app-root',
@@ -17,9 +18,14 @@ export class AppComponent implements OnInit {
 
   public repositoryPath: string;
 
-  public commitSince: string = '1 day ago';
+  public gitLogOptions: GitLogOptions = {
+    since: '1 day ago',
+    until: 'now',
+    author: '',
+    grep: ''
+  };
 
-  public commitUntil: string = 'now';
+  public allCommitsSelected: boolean = false;
 
   public infoPanelVisible: boolean = false;
 
@@ -102,8 +108,7 @@ export class AppComponent implements OnInit {
     this.commitService.getCommits(
       this.configService.getGitExecutablePath(),
       this.configService.getRepositoryPath(),
-      this.commitSince,
-      this.commitUntil
+      this.gitLogOptions
     )
       .subscribe({
         next: (response: Commit[]) => {
@@ -151,6 +156,7 @@ export class AppComponent implements OnInit {
         }
       });
     }
+    this.checkAllCommitsSelected();
   }
 
   public onSearchedFileClick(fileData: FileData) {
@@ -171,6 +177,8 @@ export class AppComponent implements OnInit {
     for (const commit of this.availableCommits) {
       commit.isSelected = commit.files.every(path => [...this.selectedFiles].some(obj => obj.path === path));
     }
+
+    this.checkAllCommitsSelected();
   }
 
   public unselectFile(fileData: FileData): void {
@@ -182,6 +190,8 @@ export class AppComponent implements OnInit {
     for (const commit of this.availableCommits) {
       commit.isSelected = commit.files.every(path => [...this.selectedFiles].some(obj => obj.path === path));
     }
+
+    this.checkAllCommitsSelected();
   }
 
   public searchFiles(searchText: any) {
@@ -251,5 +261,38 @@ export class AppComponent implements OnInit {
 
   public doesExtensionImageExist(extension: string) {
     return this.supportedExtensionImages.includes(extension);
+  }
+
+  public selectAllCommits(): void {
+    for (const commit of this.availableCommits) {
+      commit.isSelected = false;
+      this.onCommitClick(commit);
+    }
+  }
+
+  public unselectAllCommits(): void {
+    for (const commit of this.availableCommits) {
+      commit.isSelected = true;
+      this.onCommitClick(commit);
+    }
+  }
+
+  public onCommitSelectAllClick() {
+    if (this.allCommitsSelected) {
+      this.unselectAllCommits();
+    } else {
+      this.selectAllCommits();
+    }
+  }
+
+  public checkAllCommitsSelected() {
+    let allCommitsSelected = true;
+    for (const commit of this.availableCommits) {
+      if (!commit.isSelected) {
+        allCommitsSelected = false;
+        break;
+      }
+    }
+    this.allCommitsSelected = allCommitsSelected;
   }
 }

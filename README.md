@@ -35,3 +35,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 * fix API :)
 * far future: port to electron
 * far future: display files as tree? (probably useless / wont fit on screen)
+* add a list of available authors from the repository (fetch from api during app init)
+* add a global debug var to bind logs, especially in requests with big responses
