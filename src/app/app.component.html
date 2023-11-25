@@ -31,8 +31,30 @@
 
 </div>
 
+<div class="w-full flex gap-5 justify-between px-4">
 
-<div class="w-full flex flex-col items-center gap-2-5 mb-3">
+  <button (click)="reset()"
+          class="h-9 px-1 py-1 btn btn-reset bg-gray-300 text-base text-gray-800 font-bold rounded inline-flex items-center gap-2-5 cursor-pointer">
+    <span>Reset</span>
+    <img width="16" height="16" src="assets/images/reset.png">
+  </button>
+
+  <div class="flex flex-row gap-2-5">
+
+    <input type="text" [(ngModel)]="zipName" placeholder="Update_151123" class="w-80 text-lg">
+
+    <button (click)="initZip()"
+            class="h-9 px-1 py-1 btn btn-create bg-gray-300 text-base text-gray-800 font-bold rounded inline-flex items-center gap-2-5 cursor-pointer">
+      <span>[ZIP!]</span>
+      <img width="16" height="16" src="assets/images/magic.png">
+    </button>
+
+  </div>
+
+</div>
+
+
+<div class="w-full flex flex-col items-center gap-5 mb-3">
 
   <div class="w-90 flex flex-col items-center gap-2-5">
 
@@ -71,30 +93,20 @@
 
     </ng-container>
 
-
-    <div class="flex flex-row gap-2-5">
-
-      <button (click)="reset()"
-              class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer">
-        <span>Reset</span>
-        <img width="16" height="16" src="assets/images/reset.png">
-      </button>
-
-      <button (click)="initZip()"
-              class="btn btn-create bg-gray-300 text-base text-gray-800 font-bold py-1 px-3 rounded inline-flex items-center gap-2-5 cursor-pointer">
-        <span>[ZIP!]</span>
-        <img width="16" height="16" src="assets/images/magic.png">
-      </button>
-
-    </div>
-
   </div>
 
   <div class="w-90 flex flex-row gap-2-5 mb-3">
 
     <div class="w-full flex flex-col items-center">
 
-      <div class="w-full h-6 mb-2-5"></div>
+      <div class="w-full flex flex-col h-6 mb-2-5 items-center justify-center">
+
+        <label>Search for files ({{ searchResultCount }} results)</label>
+        <input class="w-80 text-lg" type="text" placeholder="Filename, e.g.: inc/User/Data.php"
+               (input)="searchFiles()"
+               [(ngModel)]="searchText">
+
+      </div>
 
       <ng-container *ngIf="searchedFiles.size; else noSearchedFiles">
 
@@ -118,14 +130,6 @@
         </cdk-virtual-scroll-viewport>
 
       </ng-container>
-
-      <div class="w-full flex flex-col h-14 items-center justify-center">
-
-        <label>Search for files ({{ searchResultCount }} results)</label>
-        <input class="w-80 text-lg" type="text" placeholder="Filename, e.g.: inc/User/Data.php"
-               (input)="searchFiles($any($event.target).value)">
-
-      </div>
 
     </div>
 
@@ -171,52 +175,76 @@
 
       </ng-container>
 
-      <div class="w-full flex items-center justify-center h-14 gap-2-5">
-
-        <div class="flex flex-col">
-          <label>Since</label>
-          <input class="text-lg" type="text" [(ngModel)]="gitLogOptions.since" placeholder="YYYY-MM-DD / 1 day ago">
-        </div>
-
-        <div class="flex flex-col">
-          <label>Until</label>
-          <input class="text-lg" type="text" [(ngModel)]="gitLogOptions.until" placeholder="YYYY-MM-DD / now">
-        </div>
-
-        <div class="flex flex-col">
-          <label>Author</label>
-          <input class="text-lg" type="text" [(ngModel)]="gitLogOptions.author" placeholder="timo.cingoez@prof4.net">
-        </div>
-
-        <div class="flex flex-col">
-          <label>Grep</label>
-          <input class="text-lg" type="text" [(ngModel)]="gitLogOptions.grep" placeholder="Parts of a commit message">
-        </div>
-
-        <div class="flex">
-
-          <button
-            class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer"
-            (click)="toggleGitPanelVisibility()">Help
-          </button>
-          <button
-            class="btn btn-reset bg-gray-300 text-base text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center gap-2-5 cursor-pointer"
-            (click)="initAvailableCommits()">Query
-          </button>
-
-        </div>
-
-      </div>
-
     </div>
 
   </div>
 
 </div>
 
-<div class="flex flex-col gap-2-5 w-full items-center justify-center">
-  <label>ZIP filename</label>
-  <input type="text" [(ngModel)]="zipName" placeholder="Update_151123" class="w-80 text-lg">
+<div class="flex gap-5 w-full justify-center">
+
+  <div class="flex flex-col gap-2-5 rounded-md pb-3 w-auto overflow-hidden" style="background-color: #151515;">
+
+    <div class="flex gap-2-5 w-full p-2" style="background-color: #A1B2C4;">
+      <span class="block h-4 w-4 rounded-full bg-red-500"></span>
+      <span class="block h-4 w-4 rounded-full bg-yellow-300"></span>
+      <span class="block h-4 w-4 rounded-full bg-green-500"></span>
+    </div>
+
+    <div class="w-full flex items-center justify-start gap-2-5 px-3">
+
+      <span class="text-lg">dev:~$ cd {{ repositoryPath }}</span>
+
+    </div>
+
+    <div class="w-full flex items-center justify-start gap-2-5 px-3">
+
+      <span class="text-lg">dev:~/{{ repositoryPath }}$ git log</span>
+
+      <div class="flex gap-2-5 text-lg h-9 items-center">
+        <label>--since=</label>
+        <input class="text-lg w-36 text-white border-none outline-none bg-gray-800" type="text"
+               [(ngModel)]="gitLogOptions.since" placeholder="1 day ago">
+      </div>
+
+      <div class="flex gap-2-5 text-lg h-9 items-center">
+        <label>--until=</label>
+        <input class="text-lg w-36 text-white border-none outline-none bg-gray-800" type="text"
+               [(ngModel)]="gitLogOptions.until" placeholder="now">
+      </div>
+
+      <div class="flex gap-2-5 text-lg h-9 items-center">
+        <label>--author=</label>
+        <input class="text-lg w-36 text-white border-none outline-none bg-gray-800" type="text"
+               [(ngModel)]="gitLogOptions.author"
+               placeholder="Name / E-Mail">
+      </div>
+
+      <div class="flex gap-2-5 text-lg h-9 items-center">
+        <label>--grep=</label>
+        <input class="text-lg w-36 text-white border-none outline-none bg-gray-800" type="text"
+               [(ngModel)]="gitLogOptions.grep"
+               placeholder="Message">
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="flex flex-col gap-2-5 justify-center">
+
+    <button
+      class="h-9 px-1 py-1 btn btn-reset bg-gray-300 text-base text-gray-800 font-bold rounded inline-flex items-center gap-2-5 cursor-pointer"
+      (click)="toggleGitPanelVisibility()">Help
+    </button>
+
+    <button
+      class="h-9 px-1 py-1 btn btn-reset bg-gray-300 text-base text-gray-800 font-bold rounded inline-flex items-center gap-2-5 cursor-pointer"
+      (click)="initAvailableCommits()">Exec
+    </button>
+
+  </div>
+
 </div>
 
 <div [class.block]="infoPanelVisible" class="info-panel">

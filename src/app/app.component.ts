@@ -41,6 +41,8 @@ export class AppComponent implements OnInit {
 
   public fileDataList: FileData[] = [];
 
+  public searchText: string = '';
+
   public searchedFiles: Set<FileData> = new Set();
 
   public searchResultCount: number = 0;
@@ -197,12 +199,12 @@ export class AppComponent implements OnInit {
     this.checkAllCommitsSelected();
   }
 
-  public searchFiles(searchText: any) {
+  public searchFiles() {
     this.searchedFiles = new Set();
 
-    if (searchText) {
+    if (this.searchText) {
       this.fileDataList.forEach((fileData: FileData) => {
-        if (fileData.path.includes(searchText)) {
+        if (fileData.path.includes(this.searchText)) {
           this.searchedFiles.add(fileData);
         }
       });
@@ -247,11 +249,18 @@ export class AppComponent implements OnInit {
   public reset() {
     this.selectedFiles = new Set();
     this.searchedFiles = new Set();
+    this.searchText = '';
     this.fileDataList.forEach((fileData) => fileData.isSelected = false);
     for (const commit of this.availableCommits) {
       commit.isSelected = false;
     }
     this.zipName = 'zip_builder_' + new Date().getTime();
+    this.gitLogOptions = {
+      since: '',
+      until: '',
+      author: '',
+      grep: ''
+    };
   }
 
   public toggleInfoPanelVisibility() {

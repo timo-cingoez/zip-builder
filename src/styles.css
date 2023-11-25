@@ -22,8 +22,20 @@
   width: fit-content;
 }
 
+.w-36 {
+  width: 9rem; /* 144px */
+}
+
 .bg-red-500 {
   background-color: rgb(239 68 68);
+}
+
+.bg-yellow-300 {
+  background-color: rgb(253 224 71);
+}
+
+.w-5 {
+  width: 1.25rem; /* 20px */
 }
 
 .bg-green-500 {
@@ -73,6 +85,10 @@
   overflow: auto;
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .gap-2-5 {
   gap: 0.625rem; /* 10px */
 }
@@ -114,6 +130,22 @@
   padding-bottom: 0.5rem;
 }
 
+.pb-2 {
+  padding-bottom: 0.5rem; /* 8px */
+}
+
+.pb-3 {
+  padding-bottom: 0.75rem; /* 12px */
+}
+
+.pl-2 {
+  padding-left: 0.5rem; /* 8px */
+}
+
+.pr-2 {
+  padding-right: 0.5rem; /* 8px */
+}
+
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -136,6 +168,14 @@
   height: 1.25rem; /* 20px */
 }
 
+.h-4 {
+  height: 1.125rem; /* 18px */
+}
+
+.w-4 {
+  width: 1.125rem; /* 18px */
+}
+
 .whitespace-nowrap {
   white-space: nowrap;
 }
@@ -150,6 +190,10 @@
 
 .justify-end {
   justify-content: flex-end;
+}
+
+.justify-start {
+  justify-content: flex-start;
 }
 
 .bg-blue-950 {
@@ -192,7 +236,19 @@
   height: 1.5rem; /* 24px */
 }
 
+.max-w-80 {
+  max-width: 80%;
+}
+
+.outline-none {
+  outline: none;
+}
+
 /* region background */
+
+.bg-gray-800 {
+  background-color: rgb(31 41 55);
+}
 
 .bg-zinc-500 {
   background-color: rgb(113 113 122) !important;
@@ -225,6 +281,10 @@
 /* endregion */
 
 /* region border */
+
+.border-none {
+  border: none;
+}
 
 .border-2 {
   border-width: 2px;
@@ -295,7 +355,7 @@
 }
 
 .h-450 {
-  height: 30.625rem; /* 650px */
+  height: 28.625rem; /* 650px */
 }
 
 .max-h-48 {
