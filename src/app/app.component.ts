@@ -49,37 +49,6 @@ export class AppComponent implements OnInit {
 
   public availableFilesCount: number = 0;
 
-  public excludedDirs = [
-    'DEBUG',
-    'dokumente',
-    'bilder',
-    'images',
-    'emoticons',
-    'log',
-    'dokumente_korrespondenz',
-    'img',
-    'Serienbriefe',
-    'export',
-    'temp',
-    'bdc posteingang',
-    '.git',
-    '.idea',
-    '.github',
-    '.tmb',
-    'mailbox_emails',
-    'stil',
-    'faq',
-    'sensus',
-    '.gitignore',
-    'log.txt',
-    'vendor',
-    'leads',
-    '2.0',
-    'boersen',
-    'archive',
-    'lds'
-  ].join(', ');
-
   public supportedExtensionImages = [
     'css',
     'gif',
@@ -97,7 +66,7 @@ export class AppComponent implements OnInit {
   constructor(
     private fileService: FileService,
     private commitService: CommitService,
-    private configService: ConfigService
+    public configService: ConfigService
   ) {
     this.repositoryPath = this.configService.getRepositoryPath();
   }
@@ -120,25 +89,25 @@ export class AppComponent implements OnInit {
           this.availableCommits = new Set(response);
         },
         error: (error) => {
-          console.error('Error fetching commits:', error);
+          this.configService.log('Error fetching commits:', error);
         },
         complete: () => {
-          console.log('initAvailableCommits finished');
+          this.configService.log('initAvailableCommits finished');
         },
       });
   }
 
   public initFileDataList(): void {
-    this.fileService.getAvailableFiles(this.configService.getRepositoryPath()).subscribe({
+    this.fileService.getAvailableFiles(this.configService.getRepositoryPath(), this.configService.getExcludedDirs()).subscribe({
       next: (files) => {
         this.fileDataList = files;
         this.availableFilesCount = this.fileDataList.length;
       },
       error: (error) => {
-        console.error('Error fetching files:', error);
+        this.configService.log('Error fetching files:', error);
       },
       complete: () => {
-        console.log('initAvailableFiles finished');
+        this.configService.log('initAvailableFiles finished');
       },
     });
   }
@@ -211,9 +180,6 @@ export class AppComponent implements OnInit {
     }
 
     this.searchResultCount = this.searchedFiles.size;
-
-    // console.log('searchText', searchText);
-    // console.log('this.searchedFiles', this.searchedFiles);
   }
 
   public initZip(): boolean {
@@ -232,14 +198,14 @@ export class AppComponent implements OnInit {
 
     this.fileService.sendFiles(data).subscribe({
       next: (response) => {
-        console.log('response', response);
+        this.configService.log('response', response);
         this.fileService.download(response.filePaths.zip, this.zipName);
       },
       error: (error) => {
-        console.error('error', error);
+        this.configService.log('error', error);
       },
       complete: () => {
-        console.log('initZip finished');
+        this.configService.log('initZip finished');
       }
     });
 
@@ -250,7 +216,7 @@ export class AppComponent implements OnInit {
     this.selectedFiles = new Set();
     this.searchedFiles = new Set();
     this.searchText = '';
-    this.fileDataList.forEach((fileData) => fileData.isSelected = false);
+    this.fileDataList.forEach((fileData) => this.unselectFile(fileData));
     for (const commit of this.availableCommits) {
       commit.isSelected = false;
     }
@@ -318,10 +284,10 @@ export class AppComponent implements OnInit {
           this.commitAuthors = new Set(response);
         },
         error: (error) => {
-          console.error('Error fetching authors:', error);
+          this.configService.log('Error fetching authors:', error);
         },
         complete: () => {
-          console.log('initCommitAuthors finished');
+          this.configService.log('initCommitAuthors finished');
         },
       });
   }

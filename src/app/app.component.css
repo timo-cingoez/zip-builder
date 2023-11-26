@@ -9,7 +9,6 @@
 }
 
 .info-panel {
-  display: none;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -19,8 +18,4 @@
   border: 1px solid #ccc;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   color: black;
-}
-
-.block {
-  display: block;
 }

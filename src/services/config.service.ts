@@ -8,7 +8,9 @@ export class ConfigService {
   private config: AppConfig = {
     apiUrl: '',
     repositoryPath: '',
-    gitExecutablePath: ''
+    gitExecutablePath: '',
+    excludedDirs: [],
+    DEBUG: false
   };
 
   public async load(): Promise<void> {
@@ -20,11 +22,11 @@ export class ConfigService {
         return response.json();
       })
       .then((data: AppConfig) => {
-        console.log('config', data);
         this.config = data;
+        this.log('load - config', data);
       })
       .catch((error: any) => {
-        console.error('Error loading configuration:', error);
+        console.log('Error loading configuration:', error);
         throw error;
       });
   }
@@ -39,5 +41,13 @@ export class ConfigService {
 
   public getRepositoryPath(): string {
     return this.config.repositoryPath;
+  }
+
+  public getExcludedDirs(): string[] {
+    return this.config.excludedDirs;
+  }
+
+  public log(...args: any) {
+    this.config.DEBUG ? console.log(...args) : null;
   }
 }

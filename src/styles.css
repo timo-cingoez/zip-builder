@@ -6,6 +6,10 @@
   flex-direction: column;
 }
 
+.block {
+  display: block;
+}
+
 .w-full {
   width: 100%;
 }

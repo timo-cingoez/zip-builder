@@ -14,28 +14,39 @@ export class FileService {
     this.baseUrl = configService.getApiUrl();
   }
 
-  public getAvailableFiles(repositoryPath: string): Observable<FileData[]> {
+  public getAvailableFiles(repositoryPath: string, excludedDirs: string[]): Observable<FileData[]> {
     const url = `${this.baseUrl}get-files.php?repository_path=${repositoryPath}`;
-    return this.http.get<FileDataResponse>(url, {responseType: 'json'}).pipe(
+    this.configService.log('getAvailableFiles - url', url);
+
+    const body = {
+      'exclude_dirs': excludedDirs
+    };
+    this.configService.log('getAvailableFiles - data', body);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<FileDataResponse>(url, body, {headers, responseType: 'json'}).pipe(
       map((response: FileDataResponse) => response.files),
       map((files: FileData[]) => files.map(file => ({...file, isSelected: false}))),
-      tap((files: FileData[]) => console.log('Parsed Files:', files)),
+      tap((files: FileData[]) => this.configService.log('Parsed Files:', files)),
       catchError(this.handleError)
     );
   }
 
   public sendFiles(data: any): Observable<any> {
-    const script = 'create-zip.php';
-    console.log('data', data);
-    console.log('url', `${this.baseUrl}${script}`);
-    return this.http.post<string[]>(`${this.baseUrl}${script}`, data);
+    const url = `${this.baseUrl}create-zip.php`
+    this.configService.log('sendFiles - url', url);
+    this.configService.log('sendFiles - data', data);
+    return this.http.post<string[]>(url, data);
   }
 
   public download(filePath: string, fileName: string) {
     const script = 'download-file.php';
     const url = `${this.baseUrl}${script}?filepath=${filePath}`;
+    this.configService.log('download - url', url);
 
-    // Set headers if needed (adjust accordingly)
     const headers = new HttpHeaders({
       'Content-Type': 'application/octet-stream',
     });
@@ -44,13 +55,7 @@ export class FileService {
       .get(url, {responseType: 'blob', headers, observe: 'response'})
       .subscribe((response) => {
         if (response.status === 200) {
-          // Extract filename from Content-Disposition header
-          const contentDisposition = response.headers.get('Content-Disposition');
-          const filename = contentDisposition
-            ? contentDisposition.split(';')[1].trim().split('=')[1]
-            : 'downloaded-file.zip';
-
-          // Trigger file download using window.open
+          // Trigger file download using window.open, will refactor in future
           // @ts-ignore
           const blob = new Blob([response.body], {type: 'application/octet-stream'});
           const downloadLink = window.URL.createObjectURL(blob);
@@ -61,8 +66,7 @@ export class FileService {
           a.click();
           document.body.removeChild(a);
         } else {
-          // Handle errors if needed
-          console.error('File download failed:', response);
+          this.configService.log('File download failed:', response);
         }
       });
   }
@@ -74,7 +78,7 @@ export class FileService {
     } else {
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    console.log(errorMessage);
+    this.configService.log(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }

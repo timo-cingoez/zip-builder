@@ -1,5 +1,7 @@
 {
   "apiUrl": "API_URL",
   "repositoryPath": "ABSOLUTE_REPOSITORY_PATH",
-  "gitExecutablePath": "ABSOLUTE_GIT_EXECUTABLE_PATH"
+  "gitExecutablePath": "ABSOLUTE_GIT_EXECUTABLE_PATH",
+  "excludedDirs": string[],
+  "DEBUG": false
 }

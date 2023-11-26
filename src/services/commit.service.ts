@@ -22,19 +22,19 @@ export class CommitService {
       'action': 'commits',
       ...args
     };
-    console.log('getCommits - params', params);
+    this.configService.log('getCommits - params', params);
 
     const queryString = Object.entries(params)
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
 
     const url = `${this.url}get-commits.php?${queryString}`;
-    console.log('getCommits - url', url);
+    this.configService.log('getCommits - url', url);
 
     return this.http.get<CommitResponse>(url, {responseType: 'json'}).pipe(
       map((response: CommitResponse) => response.commits),
       map((commits: Commit[]) => commits.map(commit => ({...commit, isSelected: false}))),
-      tap((commits: Commit[]) => console.log('Parsed Commits:', commits)),
+      tap((commits: Commit[]) => this.configService.log('Parsed Commits:', commits)),
       catchError(this.handleError)
     );
   }
@@ -45,18 +45,18 @@ export class CommitService {
       'repository_path': repositoryPath,
       'action': 'authors'
     };
-    console.log('getAuthors - params', params);
+    this.configService.log('getAuthors - params', params);
 
     const queryString = Object.entries(params)
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&');
 
     const url = `${this.url}get-commits.php?${queryString}`;
-    console.log('getAuthors - url', url);
+    this.configService.log('getAuthors - url', url);
 
     return this.http.get<string[]>(url, {responseType: 'json'}).pipe(
       map((response: string[]) => response),
-      tap((authors) => console.log('Parsed Authors:', authors)),
+      tap((authors) => this.configService.log('Parsed Authors:', authors)),
       catchError(this.handleError)
     );
   }
@@ -68,7 +68,7 @@ export class CommitService {
     } else {
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
-    console.log(errorMessage);
+    this.configService.log(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }
