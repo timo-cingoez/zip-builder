@@ -12,6 +12,7 @@ export class FileService {
 
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.baseUrl = configService.getApiUrl();
+    this.handleError = this.handleError.bind(this);
   }
 
   public getAvailableFiles(repositoryPath: string, excludedDirs: string[]): Observable<FileData[]> {

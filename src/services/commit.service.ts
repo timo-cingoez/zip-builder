@@ -13,6 +13,7 @@ export class CommitService {
 
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.url = configService.getApiUrl();
+    this.handleError = this.handleError.bind(this);
   }
 
   public getCommits(gitExecutablePath: string, repositoryPath: string, args: GitLogOptions): Observable<Commit[]> {
