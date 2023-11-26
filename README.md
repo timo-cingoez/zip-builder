@@ -1,35 +1,38 @@
-# ZipBuilder
+# zip-builder
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.6.
+A simple tool to build ZIP archives from GIT repositories, built with Angular.
 
-## Development server
+The API executes git shell commands to gather information about the repository.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### Prerequisites
 
-## Code scaffolding
+GIT.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+A web server to serve the app and the PHP backend.
 
-## Build
+### Installing
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. Clone the latest release of the project and the API to your local machine:
 
-## Running unit tests
+    ```bash
+    git clone https://github.com/timo-cingoez/zip-builder.git
+    git clone https://github.com/timo-cingoez/zip-builder-api.git
+    ```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2. Copy the cloned repositories to your web server's document root. The document root is the directory from which your web server serves files. This directory is often named `public_html`, `htdocs`, or `www`. If you're unsure about the document root location, refer to your web server's configuration.
 
-## Running end-to-end tests
+3. Navigate to zip-builder/assets and rename the config.json.example to config.json.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+4. Edit config.json and replace the defaults with appropriate values to match your configuration.
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+4. Access the project in your web browser by navigating to `http://{your-host}/zip-builder`.
 
 # TODO
-* add toast messages for actions
-* fix API :)
-* add a global debug var to bind logs, especially in requests with big responses
+* prevent initialization requests if no config is present
+* fetch excluded dirs from API (should be configurable in config)
+* add async toast messages for actions (initialization, fetching commits, creating ZIP, ..)
+* refactor API to proper endpoints
+* add a global debug var to bind logs, especially for requests with big responses
 
 # FUTURE
 * port to electron

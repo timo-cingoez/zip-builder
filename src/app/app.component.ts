@@ -12,7 +12,7 @@ import {GitLogOptions} from "../types/gitlogoptions";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public title: string = 'P4N Update-Builder';
+  public title: string = 'ZIP-Builder';
 
   public version: string = 'v1.1';
 
