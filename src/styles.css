@@ -481,3 +481,13 @@ body {
 .hidden {
   display: none;
 }
+
+.item {
+  height: auto;
+  margin: 10px;
+  transition: background-color .2s;
+}
+
+.item:hover {
+  background-color: rgb(82 82 82);
+}

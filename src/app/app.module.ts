@@ -5,6 +5,7 @@ import {AppComponent} from './app.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {FormsModule} from "@angular/forms";
 import {ConfigService} from "../services/config.service";
+import { CommitListEntryComponent } from './commit-list-entry/commit-list-entry.component';
 
 export function initializeApp(configService: ConfigService) {
   return () => configService.load();
@@ -12,7 +13,8 @@ export function initializeApp(configService: ConfigService) {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CommitListEntryComponent
   ],
   imports: [
     BrowserModule,

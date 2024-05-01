@@ -11,7 +11,9 @@ export class FileService {
   private readonly baseUrl;
 
   constructor(private http: HttpClient, private configService: ConfigService) {
-    this.baseUrl = configService.getApiUrl();
+    const configApiUrl = this.configService.getApiUrl();
+    const url = configApiUrl.slice(-1) === '/' ? configApiUrl : configApiUrl + '/';
+    this.baseUrl = url;
     this.handleError = this.handleError.bind(this);
   }
 
